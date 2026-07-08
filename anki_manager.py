@@ -172,6 +172,18 @@ class AnkiManager:
             
             time.sleep(10) # Tenta novamente a cada 10 segundos
 
+    def get_queue_size(self):
+        """Retorna o número de itens atualmente na fila local."""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM queue")
+            count = cursor.fetchone()[0]
+            conn.close()
+            return count
+        except Exception:
+            return 0
+
     def start_queue_worker(self):
         """Inicia a thread em background para processar a fila."""
         thread = Thread(target=self.process_queue, daemon=True)
